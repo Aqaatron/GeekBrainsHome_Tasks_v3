@@ -132,6 +132,12 @@ namespace task1
                 FinishNode = newFinishNode;
             }
 
+            if ((node == StartNode) && (node == FinishNode))
+            {
+                node.NextNode = null;
+
+                node.PrevNode = null;
+            }
         }
 
         public void RemoveNode(int itemIndex) 
@@ -142,13 +148,23 @@ namespace task1
 
             if (itemIndex == 0)
             {
-                var newStartNode = StartNode.NextNode;
+                if (StartNode == FinishNode)
+                {
+                    StartNode = null;
 
-                newStartNode.PrevNode = null;
+                    FinishNode = null;
+                }
+                else
+                {
+                    var newStartNode = StartNode.NextNode;
+                    
+                    newStartNode.PrevNode = null;
 
-                StartNode.NextNode = null;
 
-                StartNode = newStartNode;
+                    StartNode.NextNode = null;
+
+                    StartNode = newStartNode;
+                }
             }
             else
             {

@@ -93,6 +93,14 @@ namespace task1_test
             // act
             TestList.AddNode(5);
 
+            TestList.RemoveNode(0);
+
+            Assert.AreEqual(null, TestList.StartNode);
+
+            Assert.AreEqual(null, TestList.FinishNode);
+
+            TestList.AddNode(11);
+
             TestList.AddNode(46);
 
             TestList.AddNode(95);
