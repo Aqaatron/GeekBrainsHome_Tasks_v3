@@ -21,12 +21,12 @@ namespace ASPNET_prac1.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromQuery] int TempVal, [FromQuery] string DT)
+        public IActionResult Create([FromQuery] int temperatureValue, [FromQuery] string dateTimeString)
         {
             _temperatureData.TemperatureInfoList.Add(new TemperatureInfo
             {
-                TemperatureDateTime = DateTime.ParseExact(DT, "dd.MM.yyyy HH:mm", null),
-                TemperatureValue = TempVal,
+                TemperatureDateTime = DateTime.ParseExact(dateTimeString, "dd.MM.yyyy HH:mm", null),
+                TemperatureValue = temperatureValue,
             });
 
             return Ok();
