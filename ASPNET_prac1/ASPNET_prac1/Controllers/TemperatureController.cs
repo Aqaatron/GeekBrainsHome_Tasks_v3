@@ -11,38 +11,36 @@ namespace ASPNET_prac1.Controllers
     [Route("[controller]")]
     public class TemperatureController : ControllerBase
     {
-        //private static readonly string[] Summaries = new[]
-        //{
-        //    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-        //};
 
-        private readonly TempData TempData;
+        private readonly TemperatureData _temperatureData;
 
-        public TemperatureController(TempData TempData)
+        public TemperatureController(TemperatureData temperatureData)
         {
 
-            this.TempData = TempData;
+            this._temperatureData = temperatureData;
         }
-
 
         [HttpPost]
         public IActionResult Create([FromQuery] int TempVal, [FromQuery] string DT)
         {
-            TempData.TempInfo.Add(new TempInfo
+            _temperatureData.TemperatureInfoList.Add(new TemperatureInfo
             {
-                DateTime = DateTime.ParseExact(DT, "dd.MM.yyyy HH:mm", null),
-                TempVal = TempVal,
+                TemperatureDateTime = DateTime.ParseExact(DT, "dd.MM.yyyy HH:mm", null),
+                TemperatureValue = TempVal,
             });
 
             return Ok();
         }
 
         [HttpGet("readd")]
-        public IActionResult Read([FromQuery] string DateTimeStart, [FromQuery] string DateTimeFinish)
+        public IActionResult Read([FromQuery] string dateTimeStart, [FromQuery] string dateTimeFinish)
         {
-            var read_list = new List<TempInfo>();
+            var read_list = new List<TemperatureInfo>();
 
-            read_list = TempData.TempInfo.Where(w => (w.DateTime >= DateTime.ParseExact(DateTimeStart, "dd.MM.yyyy HH:mm", null)) & (w.DateTime <= DateTime.ParseExact(DateTimeFinish, "dd.MM.yyyy HH:mm", null))).ToList();
+            read_list =
+                _temperatureData.TemperatureInfoList.Where
+                (w => (w.TemperatureDateTime >= DateTime.ParseExact(dateTimeStart, "dd.MM.yyyy HH:mm", null)) 
+                & (w.TemperatureDateTime <= DateTime.ParseExact(dateTimeFinish, "dd.MM.yyyy HH:mm", null))).ToList();
 
             return Ok(read_list);
         }
@@ -51,17 +49,17 @@ namespace ASPNET_prac1.Controllers
         public IActionResult Read()
         { 
 
-            return Ok(TempData.TempInfo);
+            return Ok(_temperatureData.TemperatureInfoList);
         }
 
         [HttpPut]
-        public IActionResult Update([FromQuery] string DateTimeToUpdate, [FromQuery] int newTempValue)
+        public IActionResult Update([FromQuery] string dateTimeToUpdate, [FromQuery] int newTemperatureVal)
         {
-            foreach(var tm in TempData.TempInfo)
+            foreach(var tm in _temperatureData.TemperatureInfoList)
             {
-                if (tm.DateTime == DateTime.ParseExact(DateTimeToUpdate, "dd.MM.yyyy HH:mm", null)
+                if (tm.TemperatureDateTime == DateTime.ParseExact(dateTimeToUpdate, "dd.MM.yyyy HH:mm", null)
 )
-                    tm.TempVal = newTempValue;
+                    tm.TemperatureValue = newTemperatureVal;
             }
 
             return Ok();
@@ -70,13 +68,12 @@ namespace ASPNET_prac1.Controllers
         [HttpDelete]
         public IActionResult Delete([FromQuery] string DateTimeStart, [FromQuery] string DateTimeFinish)
         {
-            TempData.TempInfo = TempData.TempInfo.Where(w => (w.DateTime < DateTime.ParseExact(DateTimeStart, "dd.MM.yyyy HH:mm", null)) | (w.DateTime > DateTime.ParseExact(DateTimeFinish, "dd.MM.yyyy HH:mm", null))).ToList();
+            _temperatureData.TemperatureInfoList 
+                = _temperatureData.TemperatureInfoList.Where(w => 
+                (w.TemperatureDateTime < DateTime.ParseExact(DateTimeStart, "dd.MM.yyyy HH:mm", null)) | 
+                (w.TemperatureDateTime > DateTime.ParseExact(DateTimeFinish, "dd.MM.yyyy HH:mm", null))).ToList();
 
-            return Ok(TempData.TempInfo);
+            return Ok(_temperatureData.TemperatureInfoList);
         }
-
-
-
-
     }
 }
