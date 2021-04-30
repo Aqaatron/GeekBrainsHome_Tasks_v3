@@ -1,4 +1,3 @@
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManager\obj\Debug\netcoreapp3.1\MetricsManager.csprojAssemblyReference.cache
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManager\obj\Debug\netcoreapp3.1\MetricsManager.AssemblyInfoInputs.cache
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManager\obj\Debug\netcoreapp3.1\MetricsManager.AssemblyInfo.cs
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManager\obj\Debug\netcoreapp3.1\MetricsManager.csproj.CoreCompileInputs.cache
