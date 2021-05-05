@@ -103,3 +103,8 @@ D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\obj\Debug\netcorea
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\obj\Debug\netcoreapp3.1\MetricsManagerTests.dll
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\obj\Debug\netcoreapp3.1\MetricsManagerTests.pdb
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\obj\Debug\netcoreapp3.1\MetricsManagerTests.genruntimeconfig.cache
+D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
+D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\bin\Debug\netcoreapp3.1\NLog.dll
+D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\bin\Debug\netcoreapp3.1\NLog.Extensions.Logging.dll
+D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsManagerTests\bin\Debug\netcoreapp3.1\NLog.Web.AspNetCore.dll

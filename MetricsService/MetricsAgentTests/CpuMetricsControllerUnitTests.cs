@@ -11,10 +11,10 @@ namespace MetricsAgentTests
     {
         private CpuMetricsController controller;
 
-        public CpuMetricsControllerUnitTests()
-        {
-            controller = new CpuMetricsController();
-        }
+        //public CpuMetricsControllerUnitTests()
+        //{
+        //    controller = new CpuMetricsController();
+        //}
 
         [Fact]
         public void GetMetricsFromAgent_ReturnsOk()
