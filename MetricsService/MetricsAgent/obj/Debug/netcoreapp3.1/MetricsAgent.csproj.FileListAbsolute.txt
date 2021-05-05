@@ -26,14 +26,3 @@ D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\M
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\MetricsManager.pdb
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\obj\Debug\netcoreapp3.1\MetricsAgent.MvcApplicationPartsAssemblyInfo.cs
 D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\obj\Debug\netcoreapp3.1\MetricsAgent.csproj.CopyComplete
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\Microsoft.Extensions.DependencyInjection.Abstractions.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\NLog.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\NLog.Extensions.Logging.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\NLog.Web.AspNetCore.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\nlog.config
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\System.Data.SQLite.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\runtimes\linux-x64\native\SQLite.Interop.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\runtimes\osx-x64\native\SQLite.Interop.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\runtimes\win-x64\native\SQLite.Interop.dll
-D:\GeekBrainsHome_Tasks_v3\MetricsService\MetricsAgent\bin\Debug\netcoreapp3.1\runtimes\win-x86\native\SQLite.Interop.dll
