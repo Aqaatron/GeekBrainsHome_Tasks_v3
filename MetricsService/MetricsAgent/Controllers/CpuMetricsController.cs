@@ -7,6 +7,10 @@ using System.Threading.Tasks;
 using MetricsManager.Enums;
 using Microsoft.Extensions.Logging;
 using System.Data.SQLite;
+using MetricsAgent.Repositories;
+using MetricsAgent.MetricsClasses;
+using MetricsAgent.Response;
+using MetricsAgent.Requests;
 
 namespace MetricsAgent.Controllers
 {
@@ -16,9 +20,13 @@ namespace MetricsAgent.Controllers
     {
         private readonly ILogger<CpuMetricsController> _logger;
 
-        public CpuMetricsController(ILogger<CpuMetricsController> logger)
+        private readonly ICpuMetricsRepository _repository;
+
+        public CpuMetricsController(ILogger<CpuMetricsController> logger, ICpuMetricsRepository repository)
         {
             this._logger = logger;
+
+            this._repository = repository;
 
             _logger.LogDebug(1, "NLog встроен в CpuMetricsController");
         }
@@ -28,6 +36,39 @@ namespace MetricsAgent.Controllers
             _logger.LogInformation("Hello! This is my first message in logs!");
             return Ok();
         }
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CpuMetricCreateRequest request)
+        {
+            _repository.Create(new CpuMetric
+            {
+                Time = request.Time,
+                Value = request.Value
+            });
+
+            return Ok();
+        }
+
+
+        [HttpGet("all")]
+        public IActionResult GetAll()
+        {
+            var metrics = _repository.GetAll();
+
+            var response = new AllCpuMetricsResponse()
+            {
+                Metrics = new List<CpuMetric>()
+            };
+
+            foreach (var metric in metrics)
+            {
+                response.Metrics.Add(new CpuMetric { Time = metric.Time, Value = metric.Value, Id = metric.Id });
+            }
+
+            return Ok(response);
+        }
+
+
 
 
         [HttpGet("sql-test")]
