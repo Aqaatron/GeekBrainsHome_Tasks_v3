@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using MetricsManager.Enums;
 using Microsoft.Extensions.Logging;
 using System.Data.SQLite;
-using MetricsAgent.Repositories;
-using MetricsAgent.MetricsClasses;
-using MetricsAgent.Response;
-using MetricsAgent.Requests;
+using MetricsAgent.DAL;
+using AutoMapper;
 
 namespace MetricsAgent.Controllers
 {
@@ -22,11 +20,15 @@ namespace MetricsAgent.Controllers
 
         private readonly IDotNetMetricsRepository _repository;
 
-        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository repository)
+        private readonly IMapper _mapper;
+
+        public DotNetMetricsController(ILogger<DotNetMetricsController> logger, IDotNetMetricsRepository repository, IMapper mapper)
         {
             this._logger = logger;
 
             this._repository = repository;
+
+            this._mapper = mapper;
 
             _logger.LogDebug(1, "NLog встроен в DotNetMetricsController");
         }
@@ -36,36 +38,29 @@ namespace MetricsAgent.Controllers
         {
             _repository.Create(new DotNetMetric
             {
-                Time = request.Time,
+                Time = request.Time.ToUnixTimeSeconds(),
                 Value = request.Value
             });
 
             return Ok();
         }
 
-        [HttpGet("all")]
-        public IActionResult GetAll()
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetrics([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            var metrics = _repository.GetAll();
+            var metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new AllDotNetMetricsResponse()
             {
-                Metrics = new List<DotNetMetric>()
+                Metrics = new List<DotNetMetricDto>()
             };
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new DotNetMetric { Time = metric.Time, Value = metric.Value, Id = metric.Id });
+                response.Metrics.Add(_mapper.Map<DotNetMetricDto>(metric));
             }
 
             return Ok(response);
-        }
-
-        [HttpGet("errors-count/from/{fromTime}/to/{toTime}")]
-        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
-        {
-            _logger.LogInformation("Hello! This is my first message in logs!");
-            return Ok();
         }
     }
 }

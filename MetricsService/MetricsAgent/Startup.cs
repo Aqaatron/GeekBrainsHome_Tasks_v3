@@ -11,19 +11,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.SQLite;
-using MetricsAgent.Repositories;
-using MetricsAgent.MetricsClasses;
+using MetricsAgent.DAL;
+using AutoMapper;
+using Dapper;
 
 namespace MetricsAgent
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        private string ConnectionString;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
+            SqlMapper.AddTypeHandler(new DateTimeOffsetHandler());
+            getConnectionString();
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -31,11 +35,17 @@ namespace MetricsAgent
             services.AddControllers();
             ConfigureSqlLiteConnection(services);
             services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+            var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
+            var mapper = mapperConfiguration.CreateMapper();
+            services.AddSingleton(mapper);
+        }
+        public void getConnectionString()
+        {
+            ConnectionString = ConnectionStringClass.ConnectionString;
         }
         private void ConfigureSqlLiteConnection(IServiceCollection services)
         {
-            const string connectionString = "Data Source=metrics.db;Version=3;Pooling=true;Max Pool Size=100;";
-            var connection = new SQLiteConnection(connectionString);
+            var connection = new SQLiteConnection(ConnectionString);
             connection.Open();
             PrepareSchema(connection);
         }

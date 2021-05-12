@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using MetricsManager.Enums;
 using Microsoft.Extensions.Logging;
 using System.Data.SQLite;
-using MetricsAgent.Repositories;
-using MetricsAgent.MetricsClasses;
-using MetricsAgent.Response;
-using MetricsAgent.Requests;
+using MetricsAgent.DAL;
+using AutoMapper;
 
 namespace MetricsAgent.Controllers
 {
@@ -19,52 +17,49 @@ namespace MetricsAgent.Controllers
     public class RamMetricsController : ControllerBase
     {
         private readonly ILogger<RamMetricsController> _logger;
+
         private readonly IRamMetricsRepository _repository;
-        public RamMetricsController(ILogger<RamMetricsController> logger, IRamMetricsRepository repository)
+
+        private readonly IMapper _mapper;
+        public RamMetricsController(ILogger<RamMetricsController> logger, IRamMetricsRepository repository, IMapper mapper)
         {
             this._logger = logger;
 
             this._repository = repository;
 
+            this._mapper = mapper;
+
             _logger.LogDebug(1, "NLog встроен в RamMetricsController");
         }
 
-        [HttpGet("available")]
-        public IActionResult GetMetrics([FromRoute] TimeSpan fromTime, [FromRoute] TimeSpan toTime)
+        [HttpGet("from/{fromTime}/to/{toTime}")]
+        public IActionResult GetMetrics([FromRoute] DateTimeOffset fromTime, [FromRoute] DateTimeOffset toTime)
         {
-            _logger.LogInformation("Hello! This is my first message in logs!");
-            return Ok();
-        }
-
-        [HttpPost("create")]
-        public IActionResult Create([FromBody] RamMetricCreateRequest request)
-        {
-            _repository.Create(new RamMetric
-            {
-                Time = request.Time,
-                Value = request.Value
-            });
-
-            return Ok();
-        }
-
-
-        [HttpGet("all")]
-        public IActionResult GetAll()
-        {
-            var metrics = _repository.GetAll();
+            var metrics = _repository.GetByTimePeriod(fromTime, toTime);
 
             var response = new AllRamMetricsResponse()
             {
-                Metrics = new List<RamMetric>()
+                Metrics = new List<RamMetricDto>()
             };
 
             foreach (var metric in metrics)
             {
-                response.Metrics.Add(new RamMetric { Time = metric.Time, Value = metric.Value, Id = metric.Id });
+                response.Metrics.Add(_mapper.Map<RamMetricDto>(metric));
             }
 
             return Ok(response);
+        }
+
+        [HttpPost("create")]
+        public IActionResult Create([FromBody] CpuMetricCreateRequest request)
+        {
+            _repository.Create(new RamMetric
+            {
+                Time = request.Time.ToUnixTimeSeconds(),
+                Value = request.Value
+            });
+
+            return Ok();
         }
     }
 }
