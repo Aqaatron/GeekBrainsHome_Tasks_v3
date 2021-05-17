@@ -14,6 +14,7 @@ using System.Data.SQLite;
 using MetricsAgent.DAL;
 using AutoMapper;
 using Dapper;
+using FluentMigrator.Runner;
 
 namespace MetricsAgent
 {
@@ -35,9 +36,23 @@ namespace MetricsAgent
             services.AddControllers();
             ConfigureSqlLiteConnection(services);
             services.AddScoped<ICpuMetricsRepository, CpuMetricsRepository>();
+            services.AddScoped<IDotNetMetricsRepository, DotNetMetricsRepository>();
+            services.AddScoped<IHddMetricsRepository, HddMetricsRepository>();
+            services.AddScoped<INetworkMetricsRepository, NetworkMetricsRepository>();
+            services.AddScoped<IRamMetricsRepository, RamMetricsRepository>();
             var mapperConfiguration = new MapperConfiguration(mp => mp.AddProfile(new MapperProfile()));
             var mapper = mapperConfiguration.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddFluentMigratorCore()
+                .ConfigureRunner(rb => rb
+                    // добавляем поддержку SQLite 
+                    .AddSQLite()
+                    // устанавливаем строку подключения
+                    .WithGlobalConnectionString(ConnectionString)
+                    // подсказываем где искать классы с миграциями
+                    .ScanIn(typeof(Startup).Assembly).For.Migrations()
+                ).AddLogging(lb => lb
+                    .AddFluentMigratorConsole());
         }
         public void getConnectionString()
         {
@@ -47,70 +62,70 @@ namespace MetricsAgent
         {
             var connection = new SQLiteConnection(ConnectionString);
             connection.Open();
-            PrepareSchema(connection);
+            //PrepareSchema(connection);
         }
-        private void PrepareSchema(SQLiteConnection connection)
-        {
-            using (var command = new SQLiteCommand(connection))
-            {
-                // задаем новый текст команды для выполнения
-                // удаляем таблицу с метриками если она существует в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
-                // отправляем запрос в базу данных
-                command.ExecuteNonQuery();
+        //private void PrepareSchema(SQLiteConnection connection)
+        //{
+        //    using (var command = new SQLiteCommand(connection))
+        //    {
+        //        // задаем новый текст команды для выполнения
+        //        // удаляем таблицу с метриками если она существует в базе данных
+        //        command.CommandText = "DROP TABLE IF EXISTS cpumetrics";
+        //        // отправляем запрос в базу данных
+        //        command.ExecuteNonQuery();
 
 
-                command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
-                command.ExecuteNonQuery();
+        //        command.CommandText = @"CREATE TABLE cpumetrics(id INTEGER PRIMARY KEY,
+        //            value INT, time INT)";
+        //        command.ExecuteNonQuery();
 
-                // задаем новый текст команды для выполнения
-                // удаляем таблицу с метриками если она существует в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
-                // отправляем запрос в базу данных
-                command.ExecuteNonQuery();
+        //        // задаем новый текст команды для выполнения
+        //        // удаляем таблицу с метриками если она существует в базе данных
+        //        command.CommandText = "DROP TABLE IF EXISTS dotnetmetrics";
+        //        // отправляем запрос в базу данных
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
+        //        command.CommandText = @"CREATE TABLE dotnetmetrics(id INTEGER PRIMARY KEY,
+        //            value INT, time INT)";
 
-                command.ExecuteNonQuery();
+        //        command.ExecuteNonQuery();
 
-                // задаем новый текст команды для выполнения
-                // удаляем таблицу с метриками если она существует в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
-                // отправляем запрос в базу данных
-                command.ExecuteNonQuery();
+        //        // задаем новый текст команды для выполнения
+        //        // удаляем таблицу с метриками если она существует в базе данных
+        //        command.CommandText = "DROP TABLE IF EXISTS hddmetrics";
+        //        // отправляем запрос в базу данных
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
+        //        command.CommandText = @"CREATE TABLE hddmetrics(id INTEGER PRIMARY KEY,
+        //            value INT, time INT)";
 
-                command.ExecuteNonQuery();
+        //        command.ExecuteNonQuery();
 
-                // задаем новый текст команды для выполнения
-                // удаляем таблицу с метриками если она существует в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
-                // отправляем запрос в базу данных
-                command.ExecuteNonQuery();
+        //        // задаем новый текст команды для выполнения
+        //        // удаляем таблицу с метриками если она существует в базе данных
+        //        command.CommandText = "DROP TABLE IF EXISTS networkmetrics";
+        //        // отправляем запрос в базу данных
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
+        //        command.CommandText = @"CREATE TABLE networkmetrics(id INTEGER PRIMARY KEY,
+        //            value INT, time INT)";
 
-                command.ExecuteNonQuery();
+        //        command.ExecuteNonQuery();
 
-                // задаем новый текст команды для выполнения
-                // удаляем таблицу с метриками если она существует в базе данных
-                command.CommandText = "DROP TABLE IF EXISTS rammetrics";
-                // отправляем запрос в базу данных
-                command.ExecuteNonQuery();
+        //        // задаем новый текст команды для выполнения
+        //        // удаляем таблицу с метриками если она существует в базе данных
+        //        command.CommandText = "DROP TABLE IF EXISTS rammetrics";
+        //        // отправляем запрос в базу данных
+        //        command.ExecuteNonQuery();
 
-                command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY,
-                    value INT, time INT)";
+        //        command.CommandText = @"CREATE TABLE rammetrics(id INTEGER PRIMARY KEY,
+        //            value INT, time INT)";
 
-                command.ExecuteNonQuery();
-            }
-        }
+        //        command.ExecuteNonQuery();
+        //    }
+        //}
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IMigrationRunner migrationRunner)
         {
             if (env.IsDevelopment())
             {
@@ -127,6 +142,8 @@ namespace MetricsAgent
             {
                 endpoints.MapControllers();
             });
+
+            migrationRunner.MigrateUp();
         }
     }
 }
